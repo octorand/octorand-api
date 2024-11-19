@@ -3,6 +3,7 @@
   "version": "2.0.0",
   "type": "module",
   "scripts": {
+    "serve": "node ace serve --hmr",
     "start": "node bin/server.js",
     "build": "node ace build",
     "dev": "node ace serve --hmr",
