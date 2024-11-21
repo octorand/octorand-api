@@ -1,7 +1,9 @@
 {
   "name": "octorand-api",
   "version": "2.0.0",
+  "private": true,
   "type": "module",
+  "license": "MIT",
   "scripts": {
     "serve": "node ace serve --hmr",
     "start": "node bin/server.js",
