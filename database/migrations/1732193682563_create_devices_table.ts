@@ -7,9 +7,9 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id');
       table.integer('account_id').unsigned().references('accounts.id').nullable();
-      table.integer('verification_id').unsigned().references('verifications.id').nullable();
       table.string('private_key', 36);
       table.string('public_key', 36);
+      table.string('transaction_id').nullable();
       table.timestamp('created_at');
       table.timestamp('updated_at');
     });
