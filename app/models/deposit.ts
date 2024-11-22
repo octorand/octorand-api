@@ -1,7 +1,12 @@
 import { DateTime } from 'luxon';
-import { BaseModel, column } from '@adonisjs/lucid/orm';
+import { BaseModel, column, SnakeCaseNamingStrategy } from '@adonisjs/lucid/orm';
 
 export default class Deposit extends BaseModel {
+  /**
+   * Update naming strategy
+   */
+  public static namingStrategy = new SnakeCaseNamingStrategy();
+
   /**
    * Deposit id
    */
@@ -12,7 +17,7 @@ export default class Deposit extends BaseModel {
    * Deposit transaction id
    */
   @column()
-  declare transactionId: string;
+  declare transaction_id: string;
 
   /**
    * Sender of depoit
@@ -30,11 +35,11 @@ export default class Deposit extends BaseModel {
    * Deposit creation timestamp
    */
   @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime;
+  declare created_at: DateTime;
 
   /**
    * Deposit updated timestamp
    */
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime;
+  declare updated_at: DateTime;
 }

@@ -1,9 +1,14 @@
 import { DateTime } from 'luxon';
-import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm';
+import { BaseModel, belongsTo, column, SnakeCaseNamingStrategy } from '@adonisjs/lucid/orm';
 import type { BelongsTo } from '@adonisjs/lucid/types/relations';
 import Account from './account.js';
 
 export default class Device extends BaseModel {
+  /**
+   * Update naming strategy
+   */
+  public static namingStrategy = new SnakeCaseNamingStrategy();
+
   /**
    * Device id
    */
@@ -11,34 +16,34 @@ export default class Device extends BaseModel {
   declare id: number;
 
   /**
-   * Device secret uuid
+   * Device private key
    */
   @column()
-  declare privateKey: string;
+  declare private_key: string;
 
   /**
-   * Device public uuid
+   * Device public key
    */
   @column()
-  declare publicKey: string;
+  declare public_key: string;
 
   /**
    * Device verification transaction id
    */
   @column()
-  declare transactionId: string;
+  declare transaction_id: string;
 
   /**
    * Device creation timestamp
    */
   @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime;
+  declare created_at: DateTime;
 
   /**
    * Device updated timestamp
    */
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime;
+  declare updated_at: DateTime;
 
   /**
    * Account that device belongs to

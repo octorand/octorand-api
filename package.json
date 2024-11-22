@@ -5,8 +5,7 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "serve": "node ace serve --hmr",
-    "start": "node bin/server.js",
+    "start": "node ace serve --hmr",
     "build": "node ace build",
     "dev": "node ace serve --hmr",
     "test": "node ace test",
