@@ -12,7 +12,7 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id');
-      table.string('transaction_id', 96);
+      table.string('transaction_id', 96).unique();
       table.string('sender', 96);
       table.integer('amount');
       table.timestamp('created_at');

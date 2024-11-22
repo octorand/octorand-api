@@ -14,7 +14,14 @@ export default class AuthService {
     device.public_key = string.random(48);
     await device.save();
 
-    return device;
+    // Prepare response
+    const response = device.serialize({
+      fields: {
+        pick: ['private_key', 'public_key'],
+      },
+    });
+
+    return response;
   }
 
   /**
@@ -24,6 +31,24 @@ export default class AuthService {
    * @returns
    */
   async verify(payload: any) {
-    return payload;
+    // Read parameters
+    const private_key = payload.private_key;
+    const transaction_id = payload.transaction_id;
+
+    // Find device
+    const device = await Device.findBy('private_key', private_key);
+
+    // Read transaction details
+    const address = '';
+    const public_key = '';
+
+    // Verify parameters
+
+    // Generate token
+    const token = '';
+
+    return {
+      token: token,
+    };
   }
 }
