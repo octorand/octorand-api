@@ -7,7 +7,6 @@
   "scripts": {
     "start": "node ace serve --hmr",
     "build": "node ace build",
-    "dev": "node ace serve --hmr",
     "test": "node ace test",
     "lint": "eslint . --fix",
     "format": "prettier --write .",

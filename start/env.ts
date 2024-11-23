@@ -28,4 +28,12 @@ export default await Env.create(new URL('../', import.meta.url), {
   DB_USER: Env.schema.string(),
   DB_PASSWORD: Env.schema.string.optional(),
   DB_DATABASE: Env.schema.string(),
+
+  /*
+  |----------------------------------------------------------
+  | Variables for configuring smart contracts
+  |----------------------------------------------------------
+  */
+  CONTRACT_AUTH: Env.schema.string(),
+  CONTRACT_DEPOSIT: Env.schema.string(),
 });
