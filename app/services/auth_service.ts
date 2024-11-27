@@ -1,5 +1,7 @@
 import string from '@adonisjs/core/helpers/string';
+import { appKey } from '#config/app';
 import Device from '#models/device';
+import jwt from 'jsonwebtoken';
 
 export default class AuthService {
   /**
@@ -35,20 +37,30 @@ export default class AuthService {
     const private_key = payload.private_key;
     const transaction_id = payload.transaction_id;
 
-    // Find device
-    const device = await Device.findBy('private_key', private_key);
+    // // Find device
+    // const device = await Device.findBy('private_key', private_key);
 
-    // Read transaction details
+    // // Read transaction details
     const address = '';
     const public_key = '';
 
-    // Verify parameters
+    // // Verify parameters
 
     // Generate token
-    const token = '';
+    const secret = appKey.valueOf();
+    const token = jwt.sign({ id: 10, public_key: public_key, transaction_id: transaction_id }, secret);
+
+    let verified = {};
+    try {
+      var decoded = jwt.verify(token, secret);
+      verified = decoded;
+    } catch (err) {
+      verified = {};
+    }
 
     return {
       token: token,
+      verified: verified
     };
   }
 }
