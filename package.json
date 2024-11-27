@@ -6,11 +6,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node ace serve --hmr",
-    "build": "node ace build",
-    "test": "node ace test",
-    "lint": "eslint . --fix",
-    "format": "prettier --write .",
-    "typecheck": "tsc --noEmit"
+    "build": "node ace build"
   },
   "imports": {
     "#controllers/*": "./app/controllers/*.js",
