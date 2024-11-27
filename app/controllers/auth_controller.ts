@@ -1,6 +1,6 @@
 import { inject } from '@adonisjs/core';
 import type { HttpContext } from '@adonisjs/core/http';
-import { setupValidator, verifyValidator } from '#validators/auth_validator';
+import { accountValidator, setupValidator, verifyValidator } from '#validators/auth_validator';
 import AuthService from '#services/auth_service';
 
 @inject()
@@ -19,8 +19,20 @@ export default class AuthController {
    * @returns
    */
   async setup(context: HttpContext) {
+    // Validate request
     await context.request.validateUsing(setupValidator);
-    return this.authService.setup();
+
+    // Setup new device
+    const device = await this.authService.setupDevice();
+
+    // Prepare response
+    const response = device.serialize({
+      fields: {
+        pick: ['private_key', 'public_key'],
+      },
+    });
+
+    return response;
   }
 
   /**
@@ -30,7 +42,40 @@ export default class AuthController {
    * @returns
    */
   async verify(context: HttpContext) {
+    // Validate request
     const payload = await context.request.validateUsing(verifyValidator);
-    return this.authService.verify(payload);
+
+    // Verify device parameters
+    const token = await this.authService.verifyDevice(payload);
+
+    // Prepare response
+    const response = {
+      token: token
+    };
+
+    return response;
+  }
+
+  /**
+   * Get current account details
+   *
+   * @param context
+   * @returns
+   */
+  async account(context: HttpContext) {
+    // Validate request
+    const payload = await context.request.validateUsing(accountValidator);
+
+    // Read account details
+    const account = await this.authService.getCurrentAccount(payload);
+
+    // Prepare response
+    const response = account.serialize({
+      fields: {
+        pick: ['id', 'address', 'hearts', 'stars'],
+      },
+    });
+
+    return response;
   }
 }

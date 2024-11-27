@@ -1,13 +1,21 @@
 import type { HttpContext } from '@adonisjs/core/http';
 import type { NextFn } from '@adonisjs/core/types/http';
 import { appKey } from '#config/app';
-import Account from '#models/account';
-import UnprocessableException from '#exceptions/unprocessable_exception';
 import UnauthorizedException from '#exceptions/unauthorized_exception';
+import UnprocessableException from '#exceptions/unprocessable_exception';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
-export default class AuthMiddleware {
+export default class AuthAccountMiddleware {
   async handle(ctx: HttpContext, next: NextFn) {
+    // Read account parameters
+    const account_id = ctx.request.input('account_id');
+    const account_address = ctx.request.input('account_address');
+
+    // Stop if account parameters present
+    if (account_id || account_address) {
+      throw new UnprocessableException('Invalid account parameters');
+    }
+
     // Read token
     let token = ctx.request.header('authorization');
 
@@ -28,16 +36,9 @@ export default class AuthMiddleware {
       const id = decoded.id;
       const address = decoded.address;
 
-      // Fetch account details
-      let account = await Account.query().where('address', address).where('id', id).first();
-
-      // Make sure account exists
-      if (!account) {
-        throw new UnauthorizedException('Invalid authorization token');
-      }
-
-      // Add account to context
-
+      // Add account details to request
+      ctx.request.all()['account_id'] = id;
+      ctx.request.all()['account_address'] = address;
     } catch (err) {
       throw new UnauthorizedException('Invalid authorization token');
     }

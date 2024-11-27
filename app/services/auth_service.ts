@@ -3,6 +3,7 @@ import { appKey } from '#config/app';
 import env from '#start/env';
 import string from '@adonisjs/core/helpers/string';
 import IndexerHelper from '#helpers/indexer_helper';
+import UnauthorizedException from '#exceptions/unauthorized_exception';
 import UnprocessableException from '#exceptions/unprocessable_exception';
 import Account from '#models/account';
 import Device from '#models/device';
@@ -18,34 +19,48 @@ export default class AuthService {
   constructor(private indexerHelper: IndexerHelper) { }
 
   /**
-   * Setup authentication parameters
+   * Get currently authenticated account
+   * 
+   * @param payload
+   * @returns 
+   */
+  async getCurrentAccount(payload: any): Promise<Account> {
+    // Fetch account details
+    let account = await Account.query()
+      .where('id', payload.account_id)
+      .where('address', payload.account_address)
+      .first();
+
+    // Make sure account exists
+    if (!account) {
+      throw new UnauthorizedException('Invalid authorization token');
+    }
+
+    return account;
+  }
+
+  /**
+   * Setup new device for authentication
    *
    * @returns
    */
-  async setup() {
+  async setupDevice(): Promise<Device> {
     // Create new device
     const device = new Device();
     device.private_key = string.random(48);
     device.public_key = string.random(48);
     await device.save();
 
-    // Prepare response
-    const response = device.serialize({
-      fields: {
-        pick: ['private_key', 'public_key'],
-      },
-    });
-
-    return response;
+    return device;
   }
 
   /**
-   * Verify authentication parameters
+   * Verify authentication parameters and create a token 
    *
    * @param payload
    * @returns
    */
-  async verify(payload: any) {
+  async verifyDevice(payload: any): Promise<string> {
     // Read parameters
     const private_key = payload.private_key;
     const transaction_id = payload.transaction_id;
@@ -101,8 +116,6 @@ export default class AuthService {
     const data = { id: account.id, address: account.address, public_key: public_key, transaction_id: transaction_id };
     const token = jwt.sign(data, secret);
 
-    return {
-      token: token
-    };
+    return token;
   }
 }
