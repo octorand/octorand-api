@@ -22,10 +22,16 @@ export default class Account extends BaseModel {
   declare address: string;
 
   /**
-   * Account balance
+   * Account hearts balance
    */
   @column()
-  declare balance: number;
+  declare hearts: number;
+
+  /**
+   * Account stars balance
+   */
+  @column()
+  declare stars: number;
 
   /**
    * Account creation timestamp
@@ -42,6 +48,6 @@ export default class Account extends BaseModel {
   /**
    * List of devices belongs to account
    */
-  @hasMany(() => Device)
+  @hasMany(() => Device, { foreignKey: 'account_id' })
   declare devices: HasMany<typeof Device>;
 }

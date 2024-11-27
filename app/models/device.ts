@@ -16,6 +16,12 @@ export default class Device extends BaseModel {
   declare id: number;
 
   /**
+   * Device account id
+   */
+  @column()
+  declare account_id: number | null;
+
+  /**
    * Device private key
    */
   @column()
@@ -48,6 +54,6 @@ export default class Device extends BaseModel {
   /**
    * Account that device belongs to
    */
-  @belongsTo(() => Account)
+  @belongsTo(() => Account, { foreignKey: 'account_id' })
   declare account: BelongsTo<typeof Account>;
 }

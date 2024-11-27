@@ -13,7 +13,8 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id');
       table.string('address', 96).unique();
-      table.integer('balance');
+      table.integer('hearts');
+      table.integer('stars');
       table.timestamp('created_at');
       table.timestamp('updated_at');
     });

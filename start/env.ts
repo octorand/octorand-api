@@ -31,9 +31,19 @@ export default await Env.create(new URL('../', import.meta.url), {
 
   /*
   |----------------------------------------------------------
+  | Variables for configuring blockchain indexers
+  |----------------------------------------------------------
+  */
+  ALGO_INDEXER_URL: Env.schema.string(),
+  ALGO_INDEXER_PAGE_SIZE: Env.schema.number(),
+
+  /*
+  |----------------------------------------------------------
   | Variables for configuring smart contracts
   |----------------------------------------------------------
   */
-  CONTRACT_AUTH: Env.schema.string(),
-  CONTRACT_DEPOSIT: Env.schema.string(),
+  CONTRACT_AUTH_APPLICATION_ID: Env.schema.number(),
+  CONTRACT_AUTH_METHOD_SIGNATURE: Env.schema.string(),
+  CONTRACT_DEPOSIT_APPLICATION_ID: Env.schema.number(),
+  CONTRACT_DEPOSIT_METHOD_SIGNATURE: Env.schema.string(),
 });

@@ -10,7 +10,7 @@ export default class AuthController {
    *
    * @param authService
    */
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   /**
    * Setup authentication parameters
@@ -18,8 +18,8 @@ export default class AuthController {
    * @param context
    * @returns
    */
-  setup(context: HttpContext) {
-    context.request.validateUsing(setupValidator);
+  async setup(context: HttpContext) {
+    await context.request.validateUsing(setupValidator);
     return this.authService.setup();
   }
 
@@ -29,8 +29,8 @@ export default class AuthController {
    * @param context
    * @returns
    */
-  verify(context: HttpContext) {
-    const payload = context.request.validateUsing(verifyValidator);
+  async verify(context: HttpContext) {
+    const payload = await context.request.validateUsing(verifyValidator);
     return this.authService.verify(payload);
   }
 }
