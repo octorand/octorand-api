@@ -18,27 +18,6 @@ export default class AuthService {
   constructor(private indexerHelper: IndexerHelper) { }
 
   /**
-   * Get currently authenticated account
-   * 
-   * @param payload
-   * @returns 
-   */
-  async getCurrentAccount(payload: any): Promise<Account> {
-    // Fetch account details
-    let account = await Account.query()
-      .where('id', payload.account_id)
-      .where('address', payload.account_address)
-      .first();
-
-    // Make sure account exists
-    if (!account) {
-      throw new UnprocessableException('Invalid account');
-    }
-
-    return account;
-  }
-
-  /**
    * Setup new device for authentication
    *
    * @returns
@@ -56,14 +35,11 @@ export default class AuthService {
   /**
    * Verify authentication parameters and create a token 
    *
-   * @param payload
+   * @param private_key
+   * @param transaction_id
    * @returns
    */
-  async verifyDevice(payload: any): Promise<string> {
-    // Read parameters
-    const private_key = payload.private_key;
-    const transaction_id = payload.transaction_id;
-
+  async verifyDevice(private_key: string, transaction_id: string): Promise<string> {
     // Read contract parameters
     const contract_auth_application_id = env.get('CONTRACT_AUTH_APPLICATION_ID');
     const contract_auth_method_signature = env.get('CONTRACT_AUTH_METHOD_SIGNATURE');
@@ -116,5 +92,27 @@ export default class AuthService {
     const token = jwt.sign(data, secret);
 
     return token;
+  }
+
+  /**
+   * Get currently authenticated account
+   * 
+   * @param account_id
+   * @param account_address
+   * @returns 
+   */
+  async getCurrentAccount(account_id: number, account_address: string): Promise<Account> {
+    // Fetch account details
+    let account = await Account.query()
+      .where('id', account_id)
+      .where('address', account_address)
+      .first();
+
+    // Make sure account exists
+    if (!account) {
+      throw new UnprocessableException('Invalid account');
+    }
+
+    return account;
   }
 }

@@ -46,7 +46,7 @@ export default class AuthController {
     const payload = await context.request.validateUsing(verifyValidator);
 
     // Verify device parameters
-    const token = await this.authService.verifyDevice(payload);
+    const token = await this.authService.verifyDevice(payload.private_key, payload.transaction_id);
 
     // Prepare response
     const response = {
@@ -67,7 +67,7 @@ export default class AuthController {
     const payload = await context.request.validateUsing(accountValidator);
 
     // Read account details
-    const account = await this.authService.getCurrentAccount(payload);
+    const account = await this.authService.getCurrentAccount(payload.account_id, payload.account_address);
 
     // Prepare response
     const response = account.serialize({
