@@ -34,6 +34,12 @@ export default class Account extends BaseModel {
   declare stars: number;
 
   /**
+   * Account ranking
+   */
+  @column()
+  declare ranking: number;
+
+  /**
    * Account creation timestamp
    */
   @column.dateTime({ autoCreate: true })

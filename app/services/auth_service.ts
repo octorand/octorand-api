@@ -81,6 +81,10 @@ export default class AuthService {
       account.hearts = 5;
       account.stars = 0;
       await account.save();
+
+      // Update ranking
+      account.ranking = account.id;
+      await account.save();
     }
 
     // Assign device to account

@@ -15,6 +15,7 @@ export default class extends BaseSchema {
       table.string('address', 96).unique();
       table.integer('hearts');
       table.integer('stars');
+      table.integer('ranking');
       table.timestamp('created_at');
       table.timestamp('updated_at');
     });
