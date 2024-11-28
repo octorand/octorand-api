@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core';
 import type { HttpContext } from '@adonisjs/core/http';
 import { accountValidator, setupValidator, verifyValidator } from '#validators/auth_validator';
+import AccountService from '#services/account_service';
 import AuthService from '#services/auth_service';
 
 @inject()
@@ -8,9 +9,13 @@ export default class AuthController {
   /**
    * Initialise controller
    *
+   * @param accountService
    * @param authService
    */
-  constructor(private authService: AuthService) { }
+  constructor(
+    private accountService: AccountService,
+    private authService: AuthService
+  ) { }
 
   /**
    * Setup authentication parameters
@@ -47,6 +52,9 @@ export default class AuthController {
 
     // Verify device parameters
     const token = await this.authService.verifyDevice(payload.private_key, payload.transaction_id);
+
+    // Update account rankings
+    await this.accountService.updateRankings();
 
     // Prepare response
     const response = {
