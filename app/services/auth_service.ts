@@ -3,7 +3,6 @@ import { appKey } from '#config/app';
 import env from '#start/env';
 import string from '@adonisjs/core/helpers/string';
 import IndexerHelper from '#helpers/indexer_helper';
-import UnauthorizedException from '#exceptions/unauthorized_exception';
 import UnprocessableException from '#exceptions/unprocessable_exception';
 import Account from '#models/account';
 import Device from '#models/device';
@@ -33,7 +32,7 @@ export default class AuthService {
 
     // Make sure account exists
     if (!account) {
-      throw new UnauthorizedException('Invalid authorization token');
+      throw new UnprocessableException('Invalid account');
     }
 
     return account;

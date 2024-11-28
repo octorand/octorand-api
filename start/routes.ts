@@ -29,5 +29,5 @@ router.group(() => {
  */
 router.group(() => {
     // Authentication endpoints
-    router.get('auth/account', [AuthController, 'account']);
+    router.post('auth/account', [AuthController, 'account']);
 }).use(middleware.auth_account());
