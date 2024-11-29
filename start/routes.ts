@@ -13,6 +13,7 @@ import { middleware } from '#start/kernel'
 /**
  * List of controllers
  */
+const AccountController = () => import('#controllers/account_controller');
 const AuthController = () => import('#controllers/auth_controller');
 const DepositController = () => import('#controllers/deposit_controller');
 
@@ -31,6 +32,9 @@ router.group(() => {
 router.group(() => {
     // Authentication endpoints
     router.post('auth/account', [AuthController, 'account']);
+
+    // Account endpoints
+    router.post('account/rankings', [AccountController, 'rankings']);
 
     // Deposit endpoints
     router.post('deposit/sync', [DepositController, 'sync']);

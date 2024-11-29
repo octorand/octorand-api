@@ -1,5 +1,6 @@
 import { inject } from '@adonisjs/core';
 import db from '@adonisjs/lucid/services/db';
+import Account from '#models/account';
 
 @inject()
 export default class AccountService {
@@ -19,5 +20,14 @@ export default class AccountService {
     `;
 
     await db.rawQuery(query);
+  }
+
+  /**
+   * Read rankings
+   * 
+   * @returns
+   */
+  async readRankings(): Promise<Account[]> {
+    return await Account.query().orderBy('ranking', 'asc').exec();
   }
 }
