@@ -88,6 +88,10 @@ export default class AuthService {
     // Assign device to account
     await device.related('account').associate(account);
 
+    // Update device details
+    device.transaction_id = transaction_id;
+    await device.save();
+
     // Generate token
     const secret = appKey.valueOf();
     const data = { id: account.id, address: account.address, public_key: public_key, transaction_id: transaction_id };
