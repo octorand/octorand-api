@@ -14,6 +14,7 @@ import { middleware } from '#start/kernel'
  * List of controllers
  */
 const AuthController = () => import('#controllers/auth_controller');
+const DepositController = () => import('#controllers/deposit_controller');
 
 /**
  * Guest endpoints
@@ -30,4 +31,7 @@ router.group(() => {
 router.group(() => {
     // Authentication endpoints
     router.post('auth/account', [AuthController, 'account']);
+
+    // Deposit endpoints
+    router.post('deposit/sync', [DepositController, 'sync']);
 }).use(middleware.auth_account());

@@ -23,6 +23,15 @@ export default class IndexerHelper {
     }
 
     /**
+     * Decode number
+     * 
+     * @param value
+     */
+    decodeNumber(value: Uint8Array): number {
+        return Number(algosdk.decodeUint64(value, 'bigint'));
+    }
+
+    /**
      * Lookup account by address
      *
      * @param address

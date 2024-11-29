@@ -47,9 +47,11 @@ export default class AuthService {
     // Read transaction details
     const transaction = await this.indexerHelper.lookupTransaction(transaction_id);
     const sender = transaction['sender'];
-    const application_id = transaction['application-transaction']['application-id'];
-    const method_signature = Buffer.from(transaction['application-transaction']['application-args'][0], 'base64').toString('hex');
-    const public_key = Buffer.from(transaction['application-transaction']['application-args'][1], 'base64').toString('utf-8');
+    const application_transaction = transaction['application-transaction'];
+    const application_id = application_transaction['application-id'];
+    const application_args = application_transaction['application-args'];
+    const method_signature = Buffer.from(application_args[0], 'base64').toString('hex');
+    const public_key = Buffer.from(application_args[1], 'base64').toString('utf-8');
 
     // Verify transaction account
     if (application_id != contract_auth_application_id) {

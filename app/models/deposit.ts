@@ -20,7 +20,7 @@ export default class Deposit extends BaseModel {
   declare transaction_id: string;
 
   /**
-   * Sender of depoit
+   * Sender of deposit
    */
   @column()
   declare sender: string;
