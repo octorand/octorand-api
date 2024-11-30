@@ -154,12 +154,12 @@ export default class IndexerHelper {
      *
      * @param id
      */
-    async lookupAssetTransactions(id: number): Promise<Array<any>> {
+    async lookupAssetTransactions(id: number, min_round: number): Promise<Array<any>> {
         let limit = this.page_size;
         let key = 'transactions';
         let transactions = [];
 
-        let pager = await this.getPagedResults(this.indexer_client.lookupAssetTransactions(id), limit, key);
+        let pager = await this.getPagedResults(this.indexer_client.lookupAssetTransactions(id).minRound(min_round), limit, key);
         for (let i = 0; i < pager.length; i++) {
             transactions.push(pager[i]);
         }

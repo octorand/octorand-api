@@ -1,5 +1,6 @@
 import { inject } from '@adonisjs/core';
 import env from '#start/env';
+import db from '@adonisjs/lucid/services/db';
 import IndexerHelper from '#helpers/indexer_helper';
 import Deposit from '#models/deposit';
 import Account from '#models/account';
@@ -21,8 +22,12 @@ export default class DepositService {
     const contract_deposit_application_id = env.get('CONTRACT_DEPOSIT_APPLICATION_ID');
     const contract_deposit_method_signature = env.get('CONTRACT_DEPOSIT_METHOD_SIGNATURE');
 
+    // Find minimum round to fetch transactions from
+    let min_deposit_round = await db.from('deposits').min('round', 'min_round');
+    let min_round = min_deposit_round[0].min_round ? min_deposit_round[0].min_round : 0;
+
     // Read transactions
-    const transactions = await this.indexerHelper.lookupAssetTransactions(contract_deposit_application_id);
+    const transactions = await this.indexerHelper.lookupAssetTransactions(contract_deposit_application_id, min_round);
 
     // Process transactions
     for (let i = 0; i < transactions.length; i++) {
