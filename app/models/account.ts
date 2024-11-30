@@ -36,6 +36,12 @@ export default class Account extends BaseModel {
   declare stars: number;
 
   /**
+   * Account stars total
+   */
+  @column()
+  declare total: number;
+
+  /**
    * Account ranking
    */
   @column()

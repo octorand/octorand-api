@@ -36,7 +36,9 @@ export default class DepositService {
       const round = transaction['confirmed-round'];
 
       // Check if the transaction already processed
-      let deposit = await Deposit.query().where('transaction_id', transaction_id).first();
+      let deposit = await Deposit.query()
+        .where('transaction_id', transaction_id)
+        .first();
 
       if (!deposit) {
         const sender = transaction['sender'];
@@ -63,22 +65,22 @@ export default class DepositService {
                 if (!account) {
                   account = new Account();
                   account.address = sender;
-                  account.hearts = 5;
+                  account.hearts = 0;
                   account.stars = 0;
+                  account.total = 0;
+                  account.ranking = 0;
                   await account.save();
                 }
 
                 // Insert deposit record
                 deposit = new Deposit();
+                deposit.account_id = account.id;
                 deposit.transaction_id = transaction_id;
                 deposit.round = round;
                 deposit.amount = amount;
                 await deposit.save();
 
-                // Assign deposit to account
-                await deposit.related('account').associate(account);
-
-                // Update hearts count
+                // Update account hearts
                 account.hearts = account.hearts + Math.floor(amount / Math.pow(10, 6));
                 await account.save();
               }

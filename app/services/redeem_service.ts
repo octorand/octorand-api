@@ -14,7 +14,10 @@ export default class RedeemService {
    */
   async processAction(account_id: number, prime_generation: number, prime_position: number, stars: number, action: string): Promise<Redeem> {
     // Find prime
-    let prime = await Prime.query().where('generation', prime_generation).where('position', prime_position).first();
+    let prime = await Prime.query()
+      .where('generation', prime_generation)
+      .where('position', prime_position)
+      .first();
 
     // Verify prime
     if (!prime) {
@@ -22,25 +25,41 @@ export default class RedeemService {
     }
 
     // Find account
-    let account = await Account.query().where('id', account_id).first();
+    let account = await Account.find(account_id);
 
     // Verify account
     if (!account) {
       throw new UnprocessableException('Invalid account');
     }
 
+    // Make sure stars balance is enough
+    if (account.stars < stars) {
+      throw new UnprocessableException('Not enough stars');
+    }
+
+    // Keep track of information related to redeem
+    let data = '';
+
+    // Process redeem request
+    if (action === 'score') {
+      // Update prime score
+      const points = Math.floor(stars / 1000);
+      prime.score = prime.score + points;
+      await prime.save();
+    }
+
     // Insert redeem record
     let redeem = new Redeem();
+    redeem.account_id = account.id;
+    redeem.prime_id = prime.id;
     redeem.stars = stars;
     redeem.action = action;
-    redeem.data = '';
+    redeem.data = data;
     await redeem.save();
 
-    // Assign redeem to account
-    await redeem.related('account').associate(account);
-
-    // Assign redeem to prime
-    await redeem.related('prime').associate(prime);
+    // Update account stars
+    account.stars = account.stars - stars;
+    await account.save();
 
     return redeem;
   }

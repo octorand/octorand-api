@@ -80,7 +80,7 @@ export default class AuthController {
     // Prepare response
     const response = account.serialize({
       fields: {
-        pick: ['id', 'address', 'hearts', 'stars', 'ranking'],
+        pick: ['id', 'address', 'hearts', 'stars', 'total', 'ranking'],
       },
     });
 

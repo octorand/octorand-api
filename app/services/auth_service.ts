@@ -80,15 +80,15 @@ export default class AuthService {
     if (!account) {
       account = new Account();
       account.address = sender;
-      account.hearts = 5;
+      account.hearts = 0;
       account.stars = 0;
+      account.total = 0;
+      account.ranking = 0;
       await account.save();
     }
 
-    // Assign device to account
-    await device.related('account').associate(account);
-
     // Update device details
+    device.account_id = account.id;
     device.transaction_id = transaction_id;
     await device.save();
 
