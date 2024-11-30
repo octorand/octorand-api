@@ -12,12 +12,13 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id');
-      table.string('address', 96).unique();
-      table.integer('hearts');
-      table.integer('stars');
-      table.integer('ranking');
-      table.timestamp('created_at');
-      table.timestamp('updated_at');
+      table.string('address', 96).notNullable().unique();
+      table.integer('hearts').notNullable();
+      table.integer('stars').notNullable();
+      table.integer('total').notNullable();
+      table.integer('ranking').notNullable();
+      table.timestamp('created_at').notNullable();
+      table.timestamp('updated_at').notNullable();
     });
   }
 

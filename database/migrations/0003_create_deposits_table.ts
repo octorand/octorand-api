@@ -12,12 +12,12 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id');
-      table.integer('account_id').unsigned().references('accounts.id').nullable();
-      table.string('transaction_id', 96).unique();
-      table.integer('round');
-      table.integer('amount');
-      table.timestamp('created_at');
-      table.timestamp('updated_at');
+      table.integer('account_id').unsigned().references('accounts.id').notNullable();
+      table.string('transaction_id', 96).notNullable().unique();
+      table.integer('round').notNullable();
+      table.integer('amount').notNullable();
+      table.timestamp('created_at').notNullable();
+      table.timestamp('updated_at').notNullable();
     });
   }
 
