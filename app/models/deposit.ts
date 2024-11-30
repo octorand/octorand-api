@@ -20,6 +20,12 @@ export default class Deposit extends BaseModel {
   declare transaction_id: string;
 
   /**
+   * Deposit block round
+   */
+  @column()
+  declare round: number;
+
+  /**
    * Sender of deposit
    */
   @column()

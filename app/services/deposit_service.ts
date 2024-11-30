@@ -28,6 +28,7 @@ export default class DepositService {
     for (let i = 0; i < transactions.length; i++) {
       const transaction = transactions[i];
       const transaction_id = transaction['id'];
+      const round = transaction['confirmed-round'];
 
       // Check if the transaction already processed
       let deposit = await Deposit.query().where('transaction_id', transaction_id).first();
@@ -65,6 +66,7 @@ export default class DepositService {
                 // Insert deposit record
                 deposit = new Deposit();
                 deposit.transaction_id = transaction_id;
+                deposit.round = round;
                 deposit.sender = sender;
                 deposit.amount = amount;
                 await deposit.save();
