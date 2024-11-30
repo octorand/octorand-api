@@ -4,7 +4,7 @@ export default class extends BaseSchema {
   /**
    * Name of table
    */
-  protected tableName = 'deposits';
+  protected tableName = 'primes';
 
   /**
    * Roll forward
@@ -12,10 +12,9 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id');
-      table.integer('account_id').unsigned().references('accounts.id').nullable();
-      table.string('transaction_id', 96).unique();
-      table.integer('round');
-      table.integer('amount');
+      table.integer('generation');
+      table.integer('position');
+      table.integer('score');
       table.timestamp('created_at');
       table.timestamp('updated_at');
     });

@@ -4,7 +4,7 @@ export default class extends BaseSchema {
   /**
    * Name of table
    */
-  protected tableName = 'deposits';
+  protected tableName = 'redeems';
 
   /**
    * Roll forward
@@ -13,9 +13,10 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id');
       table.integer('account_id').unsigned().references('accounts.id').nullable();
-      table.string('transaction_id', 96).unique();
-      table.integer('round');
-      table.integer('amount');
+      table.integer('prime_id').unsigned().references('primes.id').nullable();
+      table.integer('stars');
+      table.string('action', 24);
+      table.string('data', 256);
       table.timestamp('created_at');
       table.timestamp('updated_at');
     });
