@@ -72,9 +72,11 @@ export default class DepositService {
                 deposit = new Deposit();
                 deposit.transaction_id = transaction_id;
                 deposit.round = round;
-                deposit.sender = sender;
                 deposit.amount = amount;
                 await deposit.save();
+
+                // Assign deposit to account
+                await deposit.related('account').associate(account);
 
                 // Update hearts count
                 account.hearts = account.hearts + Math.floor(amount / Math.pow(10, 6));
