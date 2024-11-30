@@ -16,6 +16,7 @@ import { middleware } from '#start/kernel'
 const AccountController = () => import('#controllers/account_controller');
 const AuthController = () => import('#controllers/auth_controller');
 const DepositController = () => import('#controllers/deposit_controller');
+const RedeemController = () => import('#controllers/redeem_controller');
 
 /**
  * Guest endpoints
@@ -38,4 +39,7 @@ router.group(() => {
 
     // Deposit endpoints
     router.post('deposit/sync', [DepositController, 'sync']);
+
+    // Redeem endpoints
+    router.post('redeem/process', [RedeemController, 'process']);
 }).use(middleware.auth_account());

@@ -32,7 +32,7 @@ export default class Redeem extends BaseModel {
    * Redeem stars
    */
   @column()
-  declare stars: string;
+  declare stars: number;
 
   /**
    * Redeem action
