@@ -25,10 +25,14 @@ export default class RedeemController {
     const payload = await context.request.validateUsing(processValidator);
 
     // Process action
-    await this.redeemService.processAction(payload.account_id, payload.prime_generation, payload.prime_position, payload.stars, payload.action);
+    const redeem = await this.redeemService.processAction(payload.account_id, payload.prime_generation, payload.prime_position, payload.stars, payload.action);
 
     // Prepare response
-    const response = {};
+    const response = redeem.serialize({
+      fields: {
+        pick: ['id', 'account_id', 'prime_id', 'stars', 'action', 'data'],
+      },
+    });
 
     return response;
   }
