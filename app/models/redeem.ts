@@ -2,58 +2,71 @@ import { DateTime } from 'luxon';
 import { BaseModel, belongsTo, column, SnakeCaseNamingStrategy } from '@adonisjs/lucid/orm';
 import type { BelongsTo } from '@adonisjs/lucid/types/relations';
 import Account from './account.js';
+import Prime from './prime.js';
 
-export default class Deposit extends BaseModel {
+export default class Redeem extends BaseModel {
   /**
    * Update naming strategy
    */
   public static namingStrategy = new SnakeCaseNamingStrategy();
 
   /**
-   * Deposit id
+   * Redeem id
    */
   @column({ isPrimary: true })
   declare id: number;
 
   /**
-   * Deposit account id
+   * Redeem account id
    */
   @column()
   declare account_id: number | null;
 
   /**
-   * Deposit transaction id
+   * Redeem prime id
    */
   @column()
-  declare transaction_id: string;
+  declare prime_id: number | null;
 
   /**
-   * Deposit block round
+   * Redeem stars
    */
   @column()
-  declare round: number;
+  declare stars: string;
 
   /**
-   * Amount deposited
+   * Redeem action
    */
   @column()
-  declare amount: number;
+  declare action: string;
 
   /**
-   * Deposit creation timestamp
+   * Redeem extra information
+   */
+  @column()
+  declare data: string;
+
+  /**
+   * Redeem creation timestamp
    */
   @column.dateTime({ autoCreate: true })
   declare created_at: DateTime;
 
   /**
-   * Deposit updated timestamp
+   * Redeem updated timestamp
    */
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updated_at: DateTime;
 
   /**
-   * Account that deposit belongs to
+   * Account that redeem belongs to
    */
   @belongsTo(() => Account, { foreignKey: 'account_id' })
   declare account: BelongsTo<typeof Account>;
+
+  /**
+   * Prime that redeem belongs to
+   */
+  @belongsTo(() => Prime, { foreignKey: 'prime_id' })
+  declare prime: BelongsTo<typeof Prime>;
 }
