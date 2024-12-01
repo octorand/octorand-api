@@ -16,7 +16,6 @@ export default class extends BaseSchema {
       table.integer('prime_id').unsigned().references('primes.id').notNullable();
       table.integer('stars').notNullable();
       table.string('action', 24).notNullable();
-      table.string('data', 256).notNullable();
       table.timestamp('created_at').notNullable();
       table.timestamp('updated_at').notNullable();
     });

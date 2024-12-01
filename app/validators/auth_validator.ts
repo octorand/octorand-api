@@ -22,7 +22,7 @@ export const verifyValidator = vine.compile(
  */
 export const accountValidator = vine.compile(
   vine.object({
-    account_id: vine.number(),
+    account_id: vine.number().positive().withoutDecimals(),
     account_address: vine.string().trim(),
   })
 );

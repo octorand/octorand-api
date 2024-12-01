@@ -41,12 +41,6 @@ export default class Redeem extends BaseModel {
   declare action: string;
 
   /**
-   * Redeem extra information
-   */
-  @column()
-  declare data: string;
-
-  /**
    * Redeem creation timestamp
    */
   @column.dateTime({ autoCreate: true })

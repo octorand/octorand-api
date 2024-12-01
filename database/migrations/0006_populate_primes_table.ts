@@ -11,21 +11,17 @@ export default class extends BaseSchema {
    * Roll forward
    */
   async up() {
+    let primes = [];
+
     for (let i = 0; i < 1000; i++) {
-      await db.table(this.tableName).insert({
-        'generation': 1,
-        'position': i,
-        'score': 0
-      });
+      primes.push({ 'generation': 1, 'position': i, 'score': 0 });
     }
 
     for (let i = 0; i < 8000; i++) {
-      await db.table(this.tableName).insert({
-        'generation': 2,
-        'position': i,
-        'score': 0
-      });
+      primes.push({ 'generation': 2, 'position': i, 'score': 0 });
     }
+
+    await db.table(this.tableName).multiInsert(primes);
   }
 
   /**

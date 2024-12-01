@@ -37,14 +37,10 @@ export default class RedeemService {
       throw new UnprocessableException('Not enough stars');
     }
 
-    // Keep track of information related to redeem
-    let data = '';
-
     // Process redeem request
     if (action === 'score') {
       // Update prime score
-      const points = Math.floor(stars / 1000);
-      prime.score = prime.score + points;
+      prime.score = prime.score + Math.floor(stars);
       await prime.save();
     }
 
@@ -54,7 +50,6 @@ export default class RedeemService {
     redeem.prime_id = prime.id;
     redeem.stars = stars;
     redeem.action = action;
-    redeem.data = data;
     await redeem.save();
 
     // Update account stars

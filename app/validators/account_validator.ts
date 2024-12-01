@@ -5,7 +5,7 @@ import vine from '@vinejs/vine';
  */
 export const rankingsValidator = vine.compile(
   vine.object({
-    account_id: vine.number(),
+    account_id: vine.number().positive().withoutDecimals(),
     account_address: vine.string().trim(),
   })
 );
