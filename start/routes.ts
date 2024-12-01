@@ -16,6 +16,7 @@ import { middleware } from '#start/kernel'
 const AccountController = () => import('#controllers/account_controller');
 const AuthController = () => import('#controllers/auth_controller');
 const DepositController = () => import('#controllers/deposit_controller');
+const PrimeController = () => import('#controllers/prime_controller');
 const RedeemController = () => import('#controllers/redeem_controller');
 
 /**
@@ -25,6 +26,9 @@ router.group(() => {
     // Authentication endpoints
     router.post('auth/setup', [AuthController, 'setup']);
     router.post('auth/verify', [AuthController, 'verify']);
+
+    // Prime endpoints
+    router.post('prime/all', [PrimeController, 'all']);
 }).use(middleware.auth_guest());
 
 /**
