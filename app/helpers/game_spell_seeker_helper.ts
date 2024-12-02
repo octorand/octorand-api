@@ -1,8 +1,6 @@
-import { inject } from '@adonisjs/core';
 import Account from '#models/account';
 
-@inject()
-export default class GameSpellSeeker {
+export default class GameSpellSeekerHelper {
 
     /**
      * List of words
