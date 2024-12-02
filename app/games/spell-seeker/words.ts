@@ -1,1 +1,0 @@
-export { default as Words } from "./words.json";
