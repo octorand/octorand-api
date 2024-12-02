@@ -16,6 +16,7 @@ import { middleware } from '#start/kernel'
 const AccountController = () => import('#controllers/account_controller');
 const AuthController = () => import('#controllers/auth_controller');
 const DepositController = () => import('#controllers/deposit_controller');
+const GameController = () => import('#controllers/game_controller');
 const PrimeController = () => import('#controllers/prime_controller');
 const RedeemController = () => import('#controllers/redeem_controller');
 
@@ -46,4 +47,8 @@ router.group(() => {
 
     // Redeem endpoints
     router.post('redeem/process', [RedeemController, 'process']);
+
+    // Game endpoints
+    router.post('game/load', [GameController, 'load']);
+    router.post('game/process', [GameController, 'process']);
 }).use(middleware.auth_account());
