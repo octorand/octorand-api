@@ -65,7 +65,7 @@ export default class GameSpellSeekerHelper {
 
         switch (action) {
             case 'check':
-                await this.processGameActionCheck(game, account, data);
+                await this.processGameActionCheck(game, data);
                 break;
             case 'end':
                 await this.processGameActionEnd(game, account);
@@ -85,7 +85,7 @@ export default class GameSpellSeekerHelper {
      * @param account
      * @param data
      */
-    private async processGameActionCheck(game: GameSpellSeeker, account: Account, data: any) {
+    private async processGameActionCheck(game: GameSpellSeeker, data: any) {
         // Validate game status
         if (game.ended) {
             throw new UnprocessableException('Game already ended');
@@ -111,14 +111,6 @@ export default class GameSpellSeekerHelper {
                 reveal = word.join('');
             }
         }
-
-        // Update hearts balance
-        if (!game.started) {
-            account.hearts = account.hearts - 1;
-        }
-
-        // Update account
-        await account.save();
 
         // Update game status
         game.reveal = reveal;
@@ -153,13 +145,9 @@ export default class GameSpellSeekerHelper {
         // calculate rewards
         let rewards = 25 - game.tries;
 
-        // Update hearts balance
-        if (!game.started) {
-            account.hearts = account.hearts - 1;
-        }
-
         // Update account
         account.stars = account.stars + rewards;
+        account.hearts = account.hearts - 1;
         await account.save();
 
         // Update game status
@@ -211,11 +199,6 @@ export default class GameSpellSeekerHelper {
                 let must_remove = removable.split('').slice(0, 10);
                 game.allowed = this.removeCharsFromString(game.allowed, must_remove);
                 break;
-        }
-
-        // Update hearts balance
-        if (!game.started) {
-            account.hearts = account.hearts - 1;
         }
 
         // Update account
