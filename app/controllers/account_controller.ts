@@ -24,6 +24,9 @@ export default class AccountController {
     // Validate request
     await context.request.validateUsing(rankingsValidator);
 
+    // Update account rankings
+    await this.accountService.updateRankings();
+
     // Read rankings
     const rankings = await this.accountService.readRankings();
 
