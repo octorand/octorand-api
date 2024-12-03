@@ -52,10 +52,22 @@ export default class GameSpellSeeker extends BaseModel {
   declare ended: boolean;
 
   /**
-   * Game tries
+   * True if first game boost is applied
    */
   @column()
-  declare tries: number;
+  declare boost_1: boolean;
+
+  /**
+   * True if second game boost is applied
+   */
+  @column()
+  declare boost_2: boolean;
+
+  /**
+   * Game guesses
+   */
+  @column()
+  declare guesses: number;
 
   /**
    * Deposit creation timestamp

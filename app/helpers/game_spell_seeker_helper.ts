@@ -35,13 +35,15 @@ export default class GameSpellSeekerHelper {
             game.allowed = this.alphabet.join('');
             game.started = false;
             game.ended = false;
-            game.tries = 0;
+            game.boost_1 = false;
+            game.boost_2 = false;
+            game.guesses = 0;
             await game.save();
         }
 
         return game.serialize({
             fields: {
-                pick: ['id', 'account_id', 'reveal', 'allowed', 'started', 'ended', 'tries'],
+                pick: ['id', 'account_id', 'reveal', 'allowed', 'started', 'ended', 'boost_1', 'boost_2', 'guesses'],
             },
         });
     }
@@ -67,11 +69,11 @@ export default class GameSpellSeekerHelper {
             case 'check':
                 await this.processGameActionCheck(game, data);
                 break;
+            case 'boost':
+                await this.processGameActionBoost(game, data);
+                break;
             case 'end':
                 await this.processGameActionEnd(game, account);
-                break;
-            case 'boost':
-                await this.processGameActionBoost(game, account, data);
                 break;
         }
 
@@ -116,7 +118,73 @@ export default class GameSpellSeekerHelper {
         game.reveal = reveal;
         game.allowed = game.allowed.replace(letter, '');
         game.started = true;
-        game.tries = game.tries + 1;
+        game.guesses = game.guesses + 1;
+        await game.save();
+    }
+
+    /**
+     * Process boost action
+     * 
+     * @param game
+     * @param account
+     * @param data
+     */
+    private async processGameActionBoost(game: GameSpellSeeker, data: any) {
+        // Validate game status
+        if (game.ended) {
+            throw new UnprocessableException('Game already ended');
+        }
+
+        // Validate game ending
+        if (game.word == game.reveal) {
+            throw new UnprocessableException('Game already completed');
+        }
+
+        // Define list of boosts
+        let boosts = [
+            { id: 1, cost: 5 },
+            { id: 2, cost: 5 },
+        ]
+
+        // Validate boost
+        let boost = boosts.find(b => b.id == data.boost);
+        if (!boost) {
+            throw new UnprocessableException('Invalid boost');
+        }
+
+        // Apply boost
+        switch (boost.id) {
+            case 1:
+                if (game.boost_1) {
+                    throw new UnprocessableException('Boost already applied');
+                }
+
+                // Reveal 10 non matching letters
+                let must_have = game.word.split('');
+                let removable = this.removeCharsFromString(game.allowed, must_have);
+                removable = this.shuffleString(removable);
+                let must_remove = removable.split('').slice(0, 10);
+                game.allowed = this.removeCharsFromString(game.allowed, must_remove);
+                game.boost_1 = true;
+
+                break;
+            case 2:
+                if (game.boost_2) {
+                    throw new UnprocessableException('Boost already applied');
+                }
+
+                // Reveal first and last letters
+                game.reveal = this.replaceStringAt(game.reveal, 0, game.word.charAt(0));
+                game.reveal = this.replaceStringAt(game.reveal, 7, game.word.charAt(7));
+                game.allowed = game.allowed.replace(game.word.charAt(0), '');
+                game.allowed = game.allowed.replace(game.word.charAt(7), '');
+                game.boost_2 = true;
+
+                break;
+        }
+
+        // Update game status
+        game.started = true;
         await game.save();
     }
 
@@ -143,71 +211,22 @@ export default class GameSpellSeekerHelper {
         }
 
         // calculate rewards
-        let rewards = 25 - game.tries;
+        let rewards = 25 - game.guesses;
+        if (game.boost_1) {
+            rewards = rewards - 5;
+        }
+        if (game.boost_2) {
+            rewards = rewards - 5;
+        }
+        rewards = Math.max(rewards, 0);
 
         // Update account
         account.stars = account.stars + rewards;
-        account.total = account.total + rewards;
         account.hearts = account.hearts - 1;
         await account.save();
 
         // Update game status
         game.ended = true;
-        await game.save();
-    }
-
-    /**
-     * Process boost action
-     * 
-     * @param game
-     * @param account
-     * @param data
-     */
-    private async processGameActionBoost(game: GameSpellSeeker, account: Account, data: any) {
-        // Validate game status
-        if (game.ended) {
-            throw new UnprocessableException('Game already ended');
-        }
-
-        // Validate game ending
-        if (game.word == game.reveal) {
-            throw new UnprocessableException('Game already completed');
-        }
-
-        // Define list of boosts
-        let boosts = [
-            { name: 'reveal-10', cost: 5 },
-        ];
-
-        // Validate boost
-        let boost = boosts.find(b => b.name == data.boost);
-        if (!boost) {
-            throw new UnprocessableException('Invalid boost');
-        }
-
-        // Validate stars
-        if (account.stars < boost.cost) {
-            throw new UnprocessableException('Not enough stars');
-        }
-
-        // Apply boost
-        switch (boost.name) {
-            case 'reveal-10':
-                // Update allowed list
-                let must_have = game.word.split('');
-                let removable = this.removeCharsFromString(game.allowed, must_have);
-                removable = this.shuffleString(removable);
-                let must_remove = removable.split('').slice(0, 10);
-                game.allowed = this.removeCharsFromString(game.allowed, must_remove);
-                break;
-        }
-
-        // Update account
-        account.stars = account.stars - boost.cost;
-        await account.save();
-
-        // Update game status
-        game.started = true;
         await game.save();
     }
 
@@ -259,5 +278,21 @@ export default class GameSpellSeekerHelper {
         }
 
         return original;
+    }
+
+    /**
+     * Replace chars in a string
+     * 
+     * @param original 
+     * @param index 
+     * @param replacement 
+     * @returns 
+     */
+    private replaceStringAt(original: string, index: number, replacement: string): string {
+        let prefix = original.substring(0, index);
+        let suffix = original.substring(index + replacement.length);
+        let result = prefix + replacement + suffix;
+
+        return result;
     }
 }

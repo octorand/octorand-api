@@ -14,7 +14,7 @@ export default class AccountService {
     // Update account ranking
     const query = `
       UPDATE accounts AS a
-        INNER JOIN (SELECT id, ROW_NUMBER() OVER(ORDER BY total DESC) AS position FROM accounts) AS r
+        INNER JOIN (SELECT id, ROW_NUMBER() OVER(ORDER BY stars DESC) AS position FROM accounts) AS r
           ON a.id = r.id
       SET a.ranking = r.position
     `;
