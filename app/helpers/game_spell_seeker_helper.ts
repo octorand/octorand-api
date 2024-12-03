@@ -104,18 +104,8 @@ export default class GameSpellSeekerHelper {
             throw new UnprocessableException('Invalid letter');
         }
 
-        // Reveal letter
-        let reveal = game.reveal;
-        for (let i = 0; i < game.word.split('').length; i++) {
-            if (game.word.charAt(i) == letter) {
-                let word = reveal.split('');
-                word[i] = letter;
-                reveal = word.join('');
-            }
-        }
-
         // Update game status
-        game.reveal = reveal;
+        game.reveal = this.revealWord(game.word, game.reveal, letter);
         game.allowed = game.allowed.replace(letter, '');
         game.started = true;
         game.guesses = game.guesses + 1;
@@ -174,8 +164,8 @@ export default class GameSpellSeekerHelper {
                 }
 
                 // Reveal first and last letters
-                game.reveal = this.replaceStringAt(game.reveal, 0, game.word.charAt(0));
-                game.reveal = this.replaceStringAt(game.reveal, 7, game.word.charAt(7));
+                game.reveal = this.revealWord(game.word, game.reveal, game.word.charAt(0));
+                game.reveal = this.revealWord(game.word, game.reveal, game.word.charAt(7));
                 game.allowed = game.allowed.replace(game.word.charAt(0), '');
                 game.allowed = game.allowed.replace(game.word.charAt(7), '');
                 game.boost_2 = true;
@@ -211,7 +201,7 @@ export default class GameSpellSeekerHelper {
         }
 
         // calculate rewards
-        let rewards = 25 - game.guesses;
+        let rewards = 30 - game.guesses;
         if (game.boost_1) {
             rewards = rewards - 5;
         }
@@ -281,18 +271,22 @@ export default class GameSpellSeekerHelper {
     }
 
     /**
-     * Replace chars in a string
+     * Reveal letters based on matching letter
      * 
-     * @param original 
-     * @param index 
-     * @param replacement 
+     * @param secret
+     * @param reveal
+     * @param letter 
      * @returns 
      */
-    private replaceStringAt(original: string, index: number, replacement: string): string {
-        let prefix = original.substring(0, index);
-        let suffix = original.substring(index + replacement.length);
-        let result = prefix + replacement + suffix;
+    private revealWord(secret: string, reveal: string, letter: string): string {
+        for (let i = 0; i < secret.split('').length; i++) {
+            if (secret.charAt(i) == letter) {
+                let word = reveal.split('');
+                word[i] = letter;
+                reveal = word.join('');
+            }
+        }
 
-        return result;
+        return reveal;
     }
 }
