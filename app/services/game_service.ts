@@ -17,6 +17,8 @@ export default class GameService {
   /**
    * Load game status
    * 
+   * @param account_id
+   * @param game
    * @returns
    */
   async loadGameStatus(account_id: number, game: string): Promise<any> {
@@ -44,6 +46,10 @@ export default class GameService {
   /**
    * Process game action
    * 
+   * @param account_id
+   * @param game
+   * @param action
+   * @param data
    * @returns
    */
   async processGameAction(account_id: number, game: string, action: string, data: any): Promise<any> {
