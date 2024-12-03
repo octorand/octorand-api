@@ -147,6 +147,7 @@ export default class GameSpellSeekerHelper {
 
         // Update account
         account.stars = account.stars + rewards;
+        account.total = account.total + rewards;
         account.hearts = account.hearts - 1;
         await account.save();
 
