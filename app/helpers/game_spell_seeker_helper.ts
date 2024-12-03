@@ -65,7 +65,7 @@ export default class GameSpellSeekerHelper {
 
         switch (action) {
             case 'check':
-                await this.processGameActionCheck(game, data);
+                await this.processGameActionCheck(game, account, data);
                 break;
             case 'end':
                 await this.processGameActionEnd(game, account);
@@ -82,9 +82,10 @@ export default class GameSpellSeekerHelper {
      * Process check action
      * 
      * @param game
+     * @param account
      * @param data
      */
-    private async processGameActionCheck(game: GameSpellSeeker, data: any) {
+    private async processGameActionCheck(game: GameSpellSeeker, account: Account, data: any) {
         // Validate game status
         if (game.ended) {
             throw new UnprocessableException('Game already ended');
@@ -111,12 +112,17 @@ export default class GameSpellSeekerHelper {
             }
         }
 
-        // Update allowed list
-        let allowed = game.allowed.replace(letter, '');
+        // Update hearts balance
+        if (!game.started) {
+            account.hearts = account.hearts - 1;
+        }
+
+        // Update account
+        await account.save();
 
         // Update game status
         game.reveal = reveal;
-        game.allowed = allowed;
+        game.allowed = game.allowed.replace(letter, '');
         game.started = true;
         game.tries = game.tries + 1;
         await game.save();
@@ -147,13 +153,18 @@ export default class GameSpellSeekerHelper {
         // calculate rewards
         let rewards = 25 - game.tries;
 
-        // Update game
-        game.ended = true;
-        await game.save();
+        // Update hearts balance
+        if (!game.started) {
+            account.hearts = account.hearts - 1;
+        }
 
         // Update account
         account.stars = account.stars + rewards;
         await account.save();
+
+        // Update game status
+        game.ended = true;
+        await game.save();
     }
 
     /**
@@ -165,13 +176,13 @@ export default class GameSpellSeekerHelper {
      */
     private async processGameActionBoost(game: GameSpellSeeker, account: Account, data: any) {
         // Validate game status
-        if (!game.started) {
-            throw new UnprocessableException('Game not started');
-        }
-
-        // Validate game status
         if (game.ended) {
             throw new UnprocessableException('Game already ended');
+        }
+
+        // Validate game ending
+        if (game.word == game.reveal) {
+            throw new UnprocessableException('Game already completed');
         }
 
         // Define list of boosts
@@ -193,23 +204,27 @@ export default class GameSpellSeekerHelper {
         // Apply boost
         switch (boost.name) {
             case 'reveal-10':
-                // Find allowed list
+                // Update allowed list
                 let must_have = game.word.split('');
                 let removable = this.removeCharsFromString(game.allowed, must_have);
                 removable = this.shuffleString(removable);
                 let must_remove = removable.split('').slice(0, 10);
-                let allowed = this.removeCharsFromString(game.allowed, must_remove);
-
-                // Update game
-                game.allowed = allowed;
-                await game.save();
-
+                game.allowed = this.removeCharsFromString(game.allowed, must_remove);
                 break;
+        }
+
+        // Update hearts balance
+        if (!game.started) {
+            account.hearts = account.hearts - 1;
         }
 
         // Update account
         account.stars = account.stars - boost.cost;
         await account.save();
+
+        // Update game status
+        game.started = true;
+        await game.save();
     }
 
     /**
