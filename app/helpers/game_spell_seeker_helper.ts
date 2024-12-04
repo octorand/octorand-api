@@ -1,7 +1,10 @@
+import { inject } from '@adonisjs/core';
 import UnprocessableException from '#exceptions/unprocessable_exception';
+import DiscordHelper from './discord_helper.js';
 import Account from '#models/account';
 import GameSpellSeeker from '#models/game_spell_seeker';
 
+@inject()
 export default class GameSpellSeekerHelper {
 
     /**
@@ -15,6 +18,13 @@ export default class GameSpellSeekerHelper {
      * Letters in alphabet
      */
     private alphabet: Array<string> = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',];
+
+    /**
+     * Initialise helper
+     * 
+     * @param discordHelper 
+     */
+    constructor(private discordHelper: DiscordHelper) { }
 
     /**
      * Load game status
@@ -219,6 +229,13 @@ export default class GameSpellSeekerHelper {
         // Update game status
         game.ended = true;
         await game.save();
+
+        // Try to send event to discord
+        try {
+            this.discordHelper.send(account.address + ' earned ' + rewards + ' stars by playing Spell Seeker');
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     /**

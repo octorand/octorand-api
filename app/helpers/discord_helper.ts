@@ -35,7 +35,7 @@ export default class DiscordHelper {
             let channel = (this.discord_client.channels.cache.get(env.get('DISCORD_CHANNEL')) as TextChannel);
             channel.send(message);
         } catch (error) {
-            console.log('Failed to send discord message');
+            console.log(error);
         }
     }
 }
