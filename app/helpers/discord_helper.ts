@@ -32,8 +32,11 @@ export default class DiscordHelper {
     send(message: string) {
         try {
             // Send message to channel
-            let channel = (this.discord_client.channels.cache.get(env.get('DISCORD_CHANNEL')) as TextChannel);
-            channel.send(message);
+            let enabled = env.get('DISCORD_ENABLED');
+            if (enabled) {
+                let channel = (this.discord_client.channels.cache.get(env.get('DISCORD_CHANNEL')) as TextChannel);
+                channel.send(message);
+            }
         } catch (error) {
             console.log(error);
         }

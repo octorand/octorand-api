@@ -42,6 +42,7 @@ export default await Env.create(new URL('../', import.meta.url), {
   | Variables for third party services
   |----------------------------------------------------------
   */
+  DISCORD_ENABLED: Env.schema.boolean(),
   DISCORD_TOKEN: Env.schema.string(),
   DISCORD_CHANNEL: Env.schema.string(),
 
