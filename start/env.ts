@@ -39,6 +39,14 @@ export default await Env.create(new URL('../', import.meta.url), {
 
   /*
   |----------------------------------------------------------
+  | Variables for third party services
+  |----------------------------------------------------------
+  */
+  DISCORD_TOKEN: Env.schema.string(),
+  DISCORD_CHANNEL: Env.schema.string(),
+
+  /*
+  |----------------------------------------------------------
   | Variables for configuring smart contracts
   |----------------------------------------------------------
   */

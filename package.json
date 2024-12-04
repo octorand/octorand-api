@@ -54,6 +54,7 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@vinejs/vine": "^2.1.0",
     "algosdk": "^2.8.0",
+    "discord.js": "^14.16.3",
     "jsonwebtoken": "^9.0.2",
     "luxon": "^3.5.0",
     "mysql2": "^3.11.4",
