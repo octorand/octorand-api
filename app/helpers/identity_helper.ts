@@ -20,7 +20,9 @@ export default class IdentityHelper {
             // Try to fetch name from nfd service
             let lookup_url = 'https://api.nf.domains/nfd/lookup?address=' + address;
             let response = await axios.get(lookup_url);
-            console.log(response);
+            if (response && response.data && response.data[address] && response.data[address].name) {
+                name = response.data[address].name;
+            }
         } catch (error) {
         }
 
