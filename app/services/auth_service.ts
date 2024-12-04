@@ -82,6 +82,7 @@ export default class AuthService {
       account.address = sender;
       account.hearts = 0;
       account.stars = 0;
+      account.total = 0;
       account.ranking = 0;
       await account.save();
     }

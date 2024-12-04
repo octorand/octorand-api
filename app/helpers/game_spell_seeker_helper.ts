@@ -211,8 +211,9 @@ export default class GameSpellSeekerHelper {
         rewards = Math.max(rewards, 0);
 
         // Update account
-        account.stars = account.stars + rewards;
         account.hearts = account.hearts - 1;
+        account.stars = account.stars + rewards;
+        account.total = account.total + rewards;
         await account.save();
 
         // Update game status
