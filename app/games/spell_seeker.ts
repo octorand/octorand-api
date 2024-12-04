@@ -1,11 +1,12 @@
 import { inject } from '@adonisjs/core';
 import UnprocessableException from '#exceptions/unprocessable_exception';
-import DiscordHelper from './discord_helper.js';
+import DiscordHelper from '#helpers/discord_helper';
+import IdentityHelper from '#helpers/identity_helper';
 import Account from '#models/account';
 import GameSpellSeeker from '#models/game_spell_seeker';
 
 @inject()
-export default class GameSpellSeekerHelper {
+export default class SpellSeeker {
 
     /**
      * List of words
@@ -23,8 +24,12 @@ export default class GameSpellSeekerHelper {
      * Initialise helper
      * 
      * @param discordHelper 
+     * @param identityHelper
      */
-    constructor(private discordHelper: DiscordHelper) { }
+    constructor(
+        private discordHelper: DiscordHelper,
+        private identityHelper: IdentityHelper
+    ) { }
 
     /**
      * Load game status
@@ -230,12 +235,9 @@ export default class GameSpellSeekerHelper {
         game.ended = true;
         await game.save();
 
-        // Try to send event to discord
-        try {
-            this.discordHelper.send(account.address + ' earned ' + rewards + ' stars by playing Spell Seeker');
-        } catch (error) {
-            console.log(error);
-        }
+        // Send event to discord
+        let name = await this.identityHelper.findName(account.address);
+        this.discordHelper.send(name + ' earned ' + rewards + ' stars by playing Spell Seeker :tada:');
     }
 
     /**

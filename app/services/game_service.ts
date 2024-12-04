@@ -1,17 +1,17 @@
 import { inject } from '@adonisjs/core';
 import UnprocessableException from '#exceptions/unprocessable_exception';
-import GameSpellSeekerHelper from '#helpers/game_spell_seeker_helper';
 import Account from '#models/account';
+import SpellSeeker from '../games/spell_seeker.js';
 
 @inject()
 export default class GameService {
   /**
    * Initialise service
    *
-   * @param gameSpellSeekerHelper
+   * @param spellSeeker
    */
   constructor(
-    private gameSpellSeekerHelper: GameSpellSeekerHelper
+    private spellSeeker: SpellSeeker
   ) { }
 
   /**
@@ -36,7 +36,7 @@ export default class GameService {
     // Load game status
     switch (game) {
       case 'spell-seeker':
-        response = await this.gameSpellSeekerHelper.loadGameStatus(account);
+        response = await this.spellSeeker.loadGameStatus(account);
         break;
     }
 
@@ -67,7 +67,7 @@ export default class GameService {
     // Process game action
     switch (game) {
       case 'spell-seeker':
-        response = await this.gameSpellSeekerHelper.processGameAction(account, action, data);
+        response = await this.spellSeeker.processGameAction(account, action, data);
         break;
     }
 

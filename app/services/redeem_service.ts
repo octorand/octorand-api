@@ -1,11 +1,24 @@
 import { inject } from '@adonisjs/core';
 import UnprocessableException from '#exceptions/unprocessable_exception';
+import IdentityHelper from '#helpers/identity_helper';
+import DiscordHelper from '#helpers/discord_helper';
 import Account from '#models/account';
 import Prime from '#models/prime';
 import Redeem from '#models/redeem';
 
 @inject()
 export default class RedeemService {
+  /**
+   * Initialise service
+   *
+   * @param discordHelper
+   * @param identityHelper
+   * @param indexerHelper
+   */
+  constructor(
+    private discordHelper: DiscordHelper,
+    private identityHelper: IdentityHelper
+  ) { }
 
   /**
    * Process action
@@ -55,6 +68,10 @@ export default class RedeemService {
     // Update account stars
     account.stars = account.stars - stars;
     await account.save();
+
+    // Send event to discord
+    let name = await this.identityHelper.findName(account.address);
+    this.discordHelper.send(name + ' redeemed ' + stars + ' stars :star:');
 
     return redeem;
   }

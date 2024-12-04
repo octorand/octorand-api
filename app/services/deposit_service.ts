@@ -1,6 +1,8 @@
 import { inject } from '@adonisjs/core';
 import env from '#start/env';
 import db from '@adonisjs/lucid/services/db';
+import DiscordHelper from '#helpers/discord_helper';
+import IdentityHelper from '#helpers/identity_helper';
 import IndexerHelper from '#helpers/indexer_helper';
 import Deposit from '#models/deposit';
 import Account from '#models/account';
@@ -10,9 +12,15 @@ export default class DepositService {
   /**
    * Initialise service
    *
+   * @param discordHelper
+   * @param identityHelper
    * @param indexerHelper
    */
-  constructor(private indexerHelper: IndexerHelper) { }
+  constructor(
+    private discordHelper: DiscordHelper,
+    private identityHelper: IdentityHelper,
+    private indexerHelper: IndexerHelper
+  ) { }
 
   /**
    * Sync deposits
@@ -80,9 +88,16 @@ export default class DepositService {
                 deposit.amount = amount;
                 await deposit.save();
 
+                // Calculate hearts
+                let hearts = Math.floor(amount / Math.pow(10, 6));
+
                 // Update account hearts
-                account.hearts = account.hearts + Math.floor(amount / Math.pow(10, 6));
+                account.hearts = account.hearts + hearts;
                 await account.save();
+
+                // Send event to discord
+                let name = await this.identityHelper.findName(account.address);
+                this.discordHelper.send(name + ' bought ' + hearts + ' hearts :heart:');
               }
             }
           }
