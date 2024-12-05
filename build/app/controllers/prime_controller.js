@@ -17,7 +17,7 @@ let PrimeController = class PrimeController {
     }
     async all(context) {
         await context.request.validateUsing(allValidator);
-        const primes = await this.primeService.readAll();
+        const primes = await this.primeService.readUpdated();
         const response = primes;
         return response;
     }

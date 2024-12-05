@@ -9,7 +9,9 @@ export default class PrimeService {
    * 
    * @returns
    */
-  async readAll(): Promise<Prime[]> {
-    return await Prime.all();
+  async readUpdated(): Promise<Prime[]> {
+    return await Prime.query()
+      .where('score', '>', 0)
+      .exec();
   }
 }

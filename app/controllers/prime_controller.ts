@@ -25,7 +25,7 @@ export default class PrimeController {
     await context.request.validateUsing(allValidator);
 
     // Read primes
-    const primes = await this.primeService.readAll();
+    const primes = await this.primeService.readUpdated();
 
     // Prepare response
     const response = primes;

@@ -7,8 +7,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { inject } from '@adonisjs/core';
 import Prime from '#models/prime';
 let PrimeService = class PrimeService {
-    async readAll() {
-        return await Prime.all();
+    async readUpdated() {
+        return await Prime.query()
+            .where('score', '>', 0)
+            .exec();
     }
 };
 PrimeService = __decorate([
