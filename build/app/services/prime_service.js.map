@@ -1,0 +1,1 @@
+{"version":3,"file":"prime_service.js","sourceRoot":"","sources":["../../../app/services/prime_service.ts"],"names":[],"mappings":";;;;;;AAAA,OAAO,EAAE,MAAM,EAAE,MAAM,gBAAgB,CAAC;AACxC,OAAO,KAAK,MAAM,eAAe,CAAC;AAGnB,IAAM,YAAY,GAAlB,MAAM,YAAY;IAO/B,KAAK,CAAC,OAAO;QACX,OAAO,MAAM,KAAK,CAAC,GAAG,EAAE,CAAC;IAC3B,CAAC;CACF,CAAA;AAVoB,YAAY;IADhC,MAAM,EAAE;GACY,YAAY,CAUhC;eAVoB,YAAY"}
