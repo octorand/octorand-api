@@ -145,26 +145,20 @@ export default class SpellSeeker {
             throw new UnprocessableException('Game already completed');
         }
 
-        // Define list of boosts
-        let boosts = [
-            { id: 1, cost: 5 },
-            { id: 2, cost: 5 },
-        ]
-
         // Validate boost
-        let boost = boosts.find(b => b.id == data.boost);
-        if (!boost) {
+        let boost = data.boost;
+        if (boost < 1 || boost > 2) {
             throw new UnprocessableException('Invalid boost');
         }
 
         // Apply boost
-        switch (boost.id) {
+        switch (boost) {
             case 1:
                 if (game.boost_1) {
                     throw new UnprocessableException('Boost already applied');
                 }
 
-                // Reveal 10 non matching letters
+                // Reveal ten non matching letters
                 let must_have = game.word.split('');
                 let removable = this.removeCharsFromString(game.allowed, must_have);
                 removable = this.shuffleString(removable);
@@ -216,12 +210,12 @@ export default class SpellSeeker {
         }
 
         // calculate rewards
-        let rewards = 30 - game.guesses;
+        let rewards = 100 - (3 * game.guesses);
         if (game.boost_1) {
-            rewards = rewards - 5;
+            rewards = rewards - 15;
         }
         if (game.boost_2) {
-            rewards = rewards - 5;
+            rewards = rewards - 15;
         }
         rewards = Math.max(rewards, 0);
 
