@@ -13,11 +13,11 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id');
       table.integer('account_id').unsigned().references('accounts.id').notNullable();
-      table.string('word', 15).notNullable();
-      table.string('pattern', 15).notNullable();
-      table.string('reveal', 15).notNullable();
-      table.string('inputs', 15).notNullable();
-      table.string('results', 15).notNullable();
+      table.string('word', 16).notNullable();
+      table.string('pattern', 16).notNullable();
+      table.string('reveal', 16).notNullable();
+      table.string('inputs', 16).notNullable();
+      table.string('results', 16).notNullable();
       table.integer('rounds').notNullable();
       table.integer('hits').notNullable();
       table.boolean('started').notNullable();

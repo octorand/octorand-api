@@ -38,9 +38,9 @@ export default class AlphaRoller {
         if (!game) {
             game = new GameAlphaRoller();
             game.account_id = account.id;
-            game.word = this.selectRandomWord(this.alphabet, 15);
-            game.pattern = this.selectWordPattern(game.word);
-            game.reveal = '';
+            game.word = this.selectRandomWord(this.alphabet, 16);
+            game.pattern = this.selectWordPattern(this.alphabet, game.word);
+            game.reveal = game.word.charAt(0);
             game.inputs = '';
             game.results = '';
             game.rounds = 8;
@@ -105,7 +105,7 @@ export default class AlphaRoller {
         }
 
         // Validate game ending
-        if (game.rounds == game.reveal.length) {
+        if (game.rounds == game.inputs.length) {
             throw new UnprocessableException('Game already completed');
         }
 
@@ -116,17 +116,18 @@ export default class AlphaRoller {
         }
 
         // Update game status
-        if (direction) {
-
+        let round = game.inputs.length;
+        let winner = Number(game.pattern.charAt(round));
+        if (winner == direction) {
+            game.results = game.results + '1';
+            game.hits = game.hits + 1;
         } else {
-
+            game.results = game.results + '0';
         }
 
-        // Update game status
-        game.reveal = this.revealWord(game.word, game.reveal, letter);
+        game.reveal = game.word.substring(0, round + 1);
         game.inputs = game.inputs + direction;
         game.started = true;
-        game.hits = game.hits + 1;
         await game.save();
     }
 
@@ -141,6 +142,11 @@ export default class AlphaRoller {
         // Validate game status
         if (game.ended) {
             throw new UnprocessableException('Game already ended');
+        }
+
+        // Validate game ending
+        if (game.rounds == game.inputs.length) {
+            throw new UnprocessableException('Game already completed');
         }
 
         // Validate boost
@@ -196,7 +202,7 @@ export default class AlphaRoller {
         }
 
         // Validate game ending
-        if (game.rounds != game.reveal.length) {
+        if (game.rounds != game.inputs.length) {
             throw new UnprocessableException('Game not completed');
         }
 
@@ -260,57 +266,26 @@ export default class AlphaRoller {
     }
 
     /**
-     * Shuffle a string 
-     *
-     * @param original 
+     * Select word letter pattern
+     * 
+     * @param list
+     * @param word
      * @returns
      */
-    private shuffleString(original: string): string {
-        let array = original.split('');
-        let size = array.length;
+    private selectWordPattern(list: Array<string>, word: string): string {
+        let pattern = '';
 
-        for (let i = size - 1; i > 0; i--) {
-            var j = Math.floor(Math.random() * (i + 1));
-            var tmp = array[i];
-            array[i] = array[j];
-            array[j] = tmp;
-        }
+        for (let i = 1; i < word.length; i++) {
+            let previous = list.indexOf(word.charAt(i - 1));
+            let current = list.indexOf(word.charAt(i));
 
-        return array.join('');
-    }
-
-    /**
-     * Remove chars from a string
-     * 
-     * @param original 
-     * @param remove 
-     * @returns 
-     */
-    private removeCharsFromString(original: string, remove: Array<string>): string {
-        for (let i = 0; i < remove.length; i++) {
-            original = original.replace(remove[i], '');
-        }
-
-        return original;
-    }
-
-    /**
-     * Reveal letters based on matching letter
-     * 
-     * @param secret
-     * @param reveal
-     * @param letter 
-     * @returns 
-     */
-    private revealWord(secret: string, reveal: string, letter: string): string {
-        for (let i = 0; i < secret.split('').length; i++) {
-            if (secret.charAt(i) == letter) {
-                let word = reveal.split('');
-                word[i] = letter;
-                reveal = word.join('');
+            if (previous < current) {
+                pattern = pattern + '1';
+            } else {
+                pattern = pattern + '0';
             }
         }
 
-        return reveal;
+        return pattern;
     }
 }
