@@ -45,20 +45,20 @@ export default class SpellSeeker {
         if (!game) {
             game = new GameSpellSeeker();
             game.account_id = account.id;
-            game.word = this.selectRandomWord(this.words);
+            game.word = this.selectRandomEntry(this.words);
             game.reveal = '--------';
             game.allowed = this.alphabet.join('');
+            game.guesses = 0;
             game.started = false;
             game.ended = false;
             game.boost_1 = false;
             game.boost_2 = false;
-            game.guesses = 0;
             await game.save();
         }
 
         return game.serialize({
             fields: {
-                pick: ['id', 'account_id', 'reveal', 'allowed', 'started', 'ended', 'boost_1', 'boost_2', 'guesses'],
+                pick: ['id', 'account_id', 'reveal', 'allowed', 'guesses', 'started', 'ended', 'boost_1', 'boost_2'],
             },
         });
     }
@@ -122,8 +122,8 @@ export default class SpellSeeker {
         // Update game status
         game.reveal = this.revealWord(game.word, game.reveal, letter);
         game.allowed = game.allowed.replace(letter, '');
-        game.started = true;
         game.guesses = game.guesses + 1;
+        game.started = true;
         await game.save();
     }
 
@@ -235,12 +235,12 @@ export default class SpellSeeker {
     }
 
     /**
-     * Select random word
+     * Select random entry
      * 
      * @param list
      * @returns
      */
-    private selectRandomWord(list: Array<string>): string {
+    private selectRandomEntry(list: Array<string>): string {
         for (let i = list.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [list[i], list[j]] = [list[j], list[i]];

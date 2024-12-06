@@ -40,6 +40,12 @@ export default class GameSpellSeeker extends BaseModel {
   declare allowed: string;
 
   /**
+   * Game guesses
+   */
+  @column()
+  declare guesses: number;
+
+  /**
    * True if the game is started
    */
   @column()
@@ -62,12 +68,6 @@ export default class GameSpellSeeker extends BaseModel {
    */
   @column()
   declare boost_2: boolean;
-
-  /**
-   * Game guesses
-   */
-  @column()
-  declare guesses: number;
 
   /**
    * Deposit creation timestamp

@@ -28,6 +28,12 @@ export default class GameAlphaRoller extends BaseModel {
   declare word: string;
 
   /**
+   * Game secret word pattern
+   */
+  @column()
+  declare pattern: string;
+
+  /**
    * Game revealed word
    */
   @column()
@@ -38,6 +44,24 @@ export default class GameAlphaRoller extends BaseModel {
    */
   @column()
   declare inputs: string;
+
+  /**
+   * Game user input results
+   */
+  @column()
+  declare results: string;
+
+  /**
+   * Game max rounds
+   */
+  @column()
+  declare rounds: number;
+
+  /**
+   * Game successful guesses
+   */
+  @column()
+  declare hits: number;
 
   /**
    * True if the game is started
@@ -62,12 +86,6 @@ export default class GameAlphaRoller extends BaseModel {
    */
   @column()
   declare boost_2: boolean;
-
-  /**
-   * Game successful guesses
-   */
-  @column()
-  declare hits: number;
 
   /**
    * Deposit creation timestamp

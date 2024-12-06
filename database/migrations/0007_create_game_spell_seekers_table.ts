@@ -16,11 +16,11 @@ export default class extends BaseSchema {
       table.string('word', 8).notNullable();
       table.string('reveal', 8).notNullable();
       table.string('allowed', 26).notNullable();
+      table.integer('guesses').notNullable();
       table.boolean('started').notNullable();
       table.boolean('ended').notNullable();
       table.boolean('boost_1').notNullable();
       table.boolean('boost_2').notNullable();
-      table.integer('guesses').notNullable();
       table.timestamp('created_at').notNullable();
       table.timestamp('updated_at').notNullable();
     });

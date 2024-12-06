@@ -14,13 +14,16 @@ export default class extends BaseSchema {
       table.increments('id');
       table.integer('account_id').unsigned().references('accounts.id').notNullable();
       table.string('word', 15).notNullable();
+      table.string('pattern', 15).notNullable();
       table.string('reveal', 15).notNullable();
       table.string('inputs', 15).notNullable();
+      table.string('results', 15).notNullable();
+      table.integer('rounds').notNullable();
+      table.integer('hits').notNullable();
       table.boolean('started').notNullable();
       table.boolean('ended').notNullable();
       table.boolean('boost_1').notNullable();
       table.boolean('boost_2').notNullable();
-      table.integer('hits').notNullable();
       table.timestamp('created_at').notNullable();
       table.timestamp('updated_at').notNullable();
     });
