@@ -125,7 +125,7 @@ export default class AlphaRoller {
             game.results = game.results + '0';
         }
 
-        game.reveal = game.word.substring(0, round + 1);
+        game.reveal = game.word.substring(0, round + 2);
         game.inputs = game.inputs + direction;
         game.started = true;
         await game.save();
