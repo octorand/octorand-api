@@ -1,6 +1,7 @@
 import { inject } from '@adonisjs/core';
 import UnprocessableException from '#exceptions/unprocessable_exception';
 import Account from '#models/account';
+import AlphaRoller from '../games/alpha_roller.js';
 import SpellSeeker from '../games/spell_seeker.js';
 
 @inject()
@@ -8,9 +9,11 @@ export default class GameService {
   /**
    * Initialise service
    *
+   * @param alphaRoller
    * @param spellSeeker
    */
   constructor(
+    private alphaRoller: AlphaRoller,
     private spellSeeker: SpellSeeker
   ) { }
 
@@ -35,6 +38,9 @@ export default class GameService {
 
     // Load game status
     switch (game) {
+      case 'alpha-roller':
+        response = await this.alphaRoller.loadGameStatus(account);
+        break;
       case 'spell-seeker':
         response = await this.spellSeeker.loadGameStatus(account);
         break;
@@ -66,6 +72,9 @@ export default class GameService {
 
     // Process game action
     switch (game) {
+      case 'alpha-roller':
+        response = await this.alphaRoller.processGameAction(account, action, data);
+        break;
       case 'spell-seeker':
         response = await this.spellSeeker.processGameAction(account, action, data);
         break;
