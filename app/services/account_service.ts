@@ -29,6 +29,7 @@ export default class AccountService {
    */
   async readRankings(): Promise<Account[]> {
     return await Account.query()
+      .where('total', '>', 0)
       .orderBy('ranking', 'asc')
       .exec();
   }

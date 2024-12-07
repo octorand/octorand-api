@@ -19,6 +19,7 @@ let AccountService = class AccountService {
     }
     async readRankings() {
         return await Account.query()
+            .where('total', '>', 0)
             .orderBy('ranking', 'asc')
             .exec();
     }
