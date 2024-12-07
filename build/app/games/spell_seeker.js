@@ -49,6 +49,9 @@ let SpellSeeker = class SpellSeeker {
         if (!game) {
             throw new UnprocessableException('Invalid game');
         }
+        if (account.hearts <= 0) {
+            throw new UnprocessableException('Not enough hearts');
+        }
         switch (action) {
             case 'check':
                 await this.processGameActionCheck(game, data);
