@@ -28,19 +28,19 @@ let SpellSeeker = class SpellSeeker {
         if (!game) {
             game = new GameSpellSeeker();
             game.account_id = account.id;
-            game.word = this.selectRandomWord(this.words);
+            game.word = this.selectRandomEntry(this.words);
             game.reveal = '--------';
             game.allowed = this.alphabet.join('');
+            game.guesses = 0;
             game.started = false;
             game.ended = false;
             game.boost_1 = false;
             game.boost_2 = false;
-            game.guesses = 0;
             await game.save();
         }
         return game.serialize({
             fields: {
-                pick: ['id', 'account_id', 'reveal', 'allowed', 'started', 'ended', 'boost_1', 'boost_2', 'guesses'],
+                pick: ['id', 'account_id', 'reveal', 'allowed', 'guesses', 'started', 'ended', 'boost_1', 'boost_2'],
             },
         });
     }
@@ -75,8 +75,8 @@ let SpellSeeker = class SpellSeeker {
         }
         game.reveal = this.revealWord(game.word, game.reveal, letter);
         game.allowed = game.allowed.replace(letter, '');
-        game.started = true;
         game.guesses = game.guesses + 1;
+        game.started = true;
         await game.save();
     }
     async processGameActionBoost(game, data) {
@@ -86,15 +86,11 @@ let SpellSeeker = class SpellSeeker {
         if (game.word == game.reveal) {
             throw new UnprocessableException('Game already completed');
         }
-        let boosts = [
-            { id: 1, cost: 5 },
-            { id: 2, cost: 5 },
-        ];
-        let boost = boosts.find(b => b.id == data.boost);
-        if (!boost) {
+        let boost = data.boost;
+        if (boost < 1 || boost > 2) {
             throw new UnprocessableException('Invalid boost');
         }
-        switch (boost.id) {
+        switch (boost) {
             case 1:
                 if (game.boost_1) {
                     throw new UnprocessableException('Boost already applied');
@@ -130,12 +126,12 @@ let SpellSeeker = class SpellSeeker {
         if (game.word != game.reveal) {
             throw new UnprocessableException('Game not completed');
         }
-        let rewards = 30 - game.guesses;
+        let rewards = 100 - (3 * game.guesses);
         if (game.boost_1) {
-            rewards = rewards - 5;
+            rewards = rewards - 15;
         }
         if (game.boost_2) {
-            rewards = rewards - 5;
+            rewards = rewards - 15;
         }
         rewards = Math.max(rewards, 0);
         account.hearts = account.hearts - 1;
@@ -147,7 +143,7 @@ let SpellSeeker = class SpellSeeker {
         let name = await this.identityHelper.findName(account.address);
         this.discordHelper.send(name + ' earned ' + rewards + ' stars by playing Spell Seeker :tada:');
     }
-    selectRandomWord(list) {
+    selectRandomEntry(list) {
         for (let i = list.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [list[i], list[j]] = [list[j], list[i]];

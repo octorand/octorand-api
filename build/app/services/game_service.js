@@ -10,10 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { inject } from '@adonisjs/core';
 import UnprocessableException from '#exceptions/unprocessable_exception';
 import Account from '#models/account';
+import AlphaRoller from '../games/alpha_roller.js';
 import SpellSeeker from '../games/spell_seeker.js';
 let GameService = class GameService {
+    alphaRoller;
     spellSeeker;
-    constructor(spellSeeker) {
+    constructor(alphaRoller, spellSeeker) {
+        this.alphaRoller = alphaRoller;
         this.spellSeeker = spellSeeker;
     }
     async loadGameStatus(account_id, game) {
@@ -23,6 +26,9 @@ let GameService = class GameService {
         }
         let response = {};
         switch (game) {
+            case 'alpha-roller':
+                response = await this.alphaRoller.loadGameStatus(account);
+                break;
             case 'spell-seeker':
                 response = await this.spellSeeker.loadGameStatus(account);
                 break;
@@ -36,6 +42,9 @@ let GameService = class GameService {
         }
         let response = {};
         switch (game) {
+            case 'alpha-roller':
+                response = await this.alphaRoller.processGameAction(account, action, data);
+                break;
             case 'spell-seeker':
                 response = await this.spellSeeker.processGameAction(account, action, data);
                 break;
@@ -45,7 +54,8 @@ let GameService = class GameService {
 };
 GameService = __decorate([
     inject(),
-    __metadata("design:paramtypes", [SpellSeeker])
+    __metadata("design:paramtypes", [AlphaRoller,
+        SpellSeeker])
 ], GameService);
 export default GameService;
 //# sourceMappingURL=game_service.js.map

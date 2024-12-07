@@ -10,59 +10,71 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { DateTime } from 'luxon';
 import { BaseModel, belongsTo, column, SnakeCaseNamingStrategy } from '@adonisjs/lucid/orm';
 import Account from './account.js';
-export default class GameSpellSeeker extends BaseModel {
+export default class GameAlphaRoller extends BaseModel {
     static namingStrategy = new SnakeCaseNamingStrategy();
 }
 __decorate([
     column({ isPrimary: true }),
     __metadata("design:type", Number)
-], GameSpellSeeker.prototype, "id", void 0);
+], GameAlphaRoller.prototype, "id", void 0);
 __decorate([
     column(),
     __metadata("design:type", Object)
-], GameSpellSeeker.prototype, "account_id", void 0);
+], GameAlphaRoller.prototype, "account_id", void 0);
 __decorate([
     column(),
     __metadata("design:type", String)
-], GameSpellSeeker.prototype, "word", void 0);
+], GameAlphaRoller.prototype, "word", void 0);
 __decorate([
     column(),
     __metadata("design:type", String)
-], GameSpellSeeker.prototype, "reveal", void 0);
+], GameAlphaRoller.prototype, "pattern", void 0);
 __decorate([
     column(),
     __metadata("design:type", String)
-], GameSpellSeeker.prototype, "allowed", void 0);
+], GameAlphaRoller.prototype, "reveal", void 0);
+__decorate([
+    column(),
+    __metadata("design:type", String)
+], GameAlphaRoller.prototype, "inputs", void 0);
+__decorate([
+    column(),
+    __metadata("design:type", String)
+], GameAlphaRoller.prototype, "results", void 0);
 __decorate([
     column(),
     __metadata("design:type", Number)
-], GameSpellSeeker.prototype, "guesses", void 0);
+], GameAlphaRoller.prototype, "rounds", void 0);
+__decorate([
+    column(),
+    __metadata("design:type", Number)
+], GameAlphaRoller.prototype, "hits", void 0);
 __decorate([
     column(),
     __metadata("design:type", Boolean)
-], GameSpellSeeker.prototype, "started", void 0);
+], GameAlphaRoller.prototype, "started", void 0);
 __decorate([
     column(),
     __metadata("design:type", Boolean)
-], GameSpellSeeker.prototype, "ended", void 0);
+], GameAlphaRoller.prototype, "ended", void 0);
 __decorate([
     column(),
     __metadata("design:type", Boolean)
-], GameSpellSeeker.prototype, "boost_1", void 0);
+], GameAlphaRoller.prototype, "boost_1", void 0);
 __decorate([
     column(),
     __metadata("design:type", Boolean)
-], GameSpellSeeker.prototype, "boost_2", void 0);
+], GameAlphaRoller.prototype, "boost_2", void 0);
 __decorate([
     column.dateTime({ autoCreate: true }),
     __metadata("design:type", DateTime)
-], GameSpellSeeker.prototype, "created_at", void 0);
+], GameAlphaRoller.prototype, "created_at", void 0);
 __decorate([
     column.dateTime({ autoCreate: true, autoUpdate: true }),
     __metadata("design:type", DateTime)
-], GameSpellSeeker.prototype, "updated_at", void 0);
+], GameAlphaRoller.prototype, "updated_at", void 0);
 __decorate([
     belongsTo(() => Account, { foreignKey: 'account_id' }),
     __metadata("design:type", Object)
-], GameSpellSeeker.prototype, "account", void 0);
-//# sourceMappingURL=game_spell_seeker.js.map
+], GameAlphaRoller.prototype, "account", void 0);
+//# sourceMappingURL=game_alpha_roller.js.map
